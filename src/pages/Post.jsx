@@ -10,6 +10,7 @@ export default function Post() {
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
     const [bookmarked, setBookmarked] = useState(false);
+    const [shareMessage, setShareMessage] = useState("");
     const [following, setFollowing] = useState(false);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
@@ -83,6 +84,31 @@ export default function Post() {
 
         setComments([commentObj, ...comments]);
         setNewComment("");
+    };
+
+    const handleShare = async () => {
+        const shareUrl = window.location.href;
+        const shareData = {
+            title: displayTitle,
+            text: `Read ${displayTitle} on MegaBlog`,
+            url: shareUrl,
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+                setShareMessage("SHARED");
+            } else {
+                await navigator.clipboard.writeText(shareUrl);
+                setShareMessage("LINK COPIED");
+            }
+        } catch (error) {
+            if (error.name !== "AbortError") {
+                setShareMessage("SHARE FAILED");
+            }
+        }
+
+        window.setTimeout(() => setShareMessage(""), 2000);
     };
 
     const displayTitle = post?.title || "UNTITLED POST";
@@ -199,10 +225,21 @@ export default function Post() {
 
                     <div className="flex items-center gap-2">
                         {/* Share */}
-                        <button className="p-2.5 rounded-full border border-[#D5D1C4] hover:bg-[#F2EFE5] text-[#121212] transition-colors">
+                        <button
+                            type="button"
+                            onClick={handleShare}
+                            aria-label="Share this post"
+                            title="Share this post"
+                            className="relative p-2.5 rounded-full border border-[#D5D1C4] hover:bg-[#F2EFE5] text-[#121212] transition-colors"
+                        >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9a3 3 0 100-2.684 3 3 0 000 2.684z" />
                             </svg>
+                            {shareMessage && (
+                                <span className="absolute right-0 bottom-full mb-2 whitespace-nowrap rounded bg-[#121212] px-2 py-1 text-[10px] text-[#B5FF00]">
+                                    {shareMessage}
+                                </span>
+                            )}
                         </button>
 
                         {/* Bookmark */}
