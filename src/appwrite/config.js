@@ -20,7 +20,7 @@ export class Service{
         const keyMap = {
             userId: ['userId', 'userid', 'user_id', 'authorId', 'user'],
             author: ['author', 'authorName', 'userName', 'username', 'name'],
-            featuredImage: ['featuredImage', 'featuredimage', 'featured_image', 'image'],
+            featuredImage: ['featuredImage', 'featuredimages', 'featuredimage', 'featured_image', 'image'],
             status: ['status'],
             title: ['title'],
             content: ['content']
@@ -85,7 +85,7 @@ export class Service{
 
     async updatePost(slug, {title, content, featuredImage, status}){
         const keyMap = {
-            featuredImage: ['featuredImage', 'featuredimage', 'featured_image', 'image'],
+            featuredImage: ['featuredImage', 'featuredimages', 'featuredimage', 'featured_image', 'image'],
             status: ['status'],
             title: ['title'],
             content: ['content']

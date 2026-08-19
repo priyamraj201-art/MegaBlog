@@ -159,7 +159,7 @@ export default function PostForm({ post }) {
                     {post && (
                         <div className="w-full mb-4 rounded-xl overflow-hidden border border-[#E0DCD0]">
                             <img
-                                src={appwriteService.getFileView(post.featuredImage)}
+                                src={appwriteService.getFileView(post.featuredImage || post.featuredimages)}
                                 alt={post.title}
                                 className="w-full h-auto object-cover"
                             />

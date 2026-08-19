@@ -2,8 +2,8 @@ import React from 'react'
 import appwriteService from "../appwrite/config"
 import {Link} from 'react-router-dom'
 
-function PostCard({ $id, title, featuredImage, featuredimage, featured_image, image, userId, userid, user_id, authorId, user, username, authorName, category = "POST", date = "RECENT", author }) {
-  const imageId = featuredImage || featuredimage || featured_image || image;
+function PostCard({ $id, title, featuredImage, featuredimages, featuredimage, featured_image, image, userId, userid, user_id, authorId, user, username, authorName, category = "POST", date = "RECENT", author }) {
+  const imageId = featuredImage || featuredimages || featuredimage || featured_image || image;
   const imageUrl = imageId ? appwriteService.getFileView(imageId) : null;
   const postUserId = userId || userid || user_id || authorId || user;
   const postAuthor = author || username || authorName;

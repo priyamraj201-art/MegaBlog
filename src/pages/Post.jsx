@@ -86,7 +86,7 @@ export default function Post() {
     };
 
     const displayTitle = post?.title || "UNTITLED POST";
-    const imageId = post?.featuredImage || post?.featuredimage || post?.featured_image || post?.image;
+    const imageId = post?.featuredImage || post?.featuredimages || post?.featuredimage || post?.featured_image || post?.image;
     const imageUrl = imageId ? appwriteService.getFileView(imageId) : null;
 
     return (
