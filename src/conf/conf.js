@@ -23,7 +23,7 @@ const conf = {
     appwriteDatabaseId: requiredVariables.VITE_APPWRITE_DATABASE_ID,
     appwriteCollectionId: requiredVariables.VITE_APPWRITE_COLLECTION_ID,
     appwriteBucketId: requiredVariables.VITE_APPWRITE_BUCKET_ID,
-    tinymceApiKey: import.meta.env.VITE_TINYMCE_API_KEY || "",
+    tinymceApiKey: import.meta.env.VITE_TINYMCE_API_KEY || "8z0n88c13jkv9ilihenjorvtru60z2upjaqun5tv13k2scx1",
 }
 
 export { missingVariables }
