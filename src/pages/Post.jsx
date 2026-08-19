@@ -87,7 +87,7 @@ export default function Post() {
 
     const displayTitle = post?.title || "UNTITLED POST";
     const imageId = post?.featuredImage || post?.featuredimage || post?.featured_image || post?.image;
-    const imageUrl = imageId ? appwriteService.getFilePreview(imageId) : null;
+    const imageUrl = imageId ? appwriteService.getFileView(imageId) : null;
 
     return (
         <div className="py-8 bg-[#FAF7EE] min-h-screen">
@@ -153,6 +153,9 @@ export default function Post() {
                                 src={imageUrl}
                                 alt={displayTitle}
                                 className="w-full h-auto max-h-[550px] object-contain"
+                                onError={(event) => {
+                                    event.currentTarget.style.display = 'none';
+                                }}
                             />
                         </div>
                     </div>

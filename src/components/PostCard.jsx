@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 
 function PostCard({ $id, title, featuredImage, featuredimage, featured_image, image, userId, userid, user_id, authorId, user, username, authorName, category = "POST", date = "RECENT", author }) {
   const imageId = featuredImage || featuredimage || featured_image || image;
-  const imageUrl = imageId ? appwriteService.getFilePreview(imageId) : null;
+  const imageUrl = imageId ? appwriteService.getFileView(imageId) : null;
   const postUserId = userId || userid || user_id || authorId || user;
   const postAuthor = author || username || authorName;
 
@@ -21,11 +21,20 @@ function PostCard({ $id, title, featuredImage, featuredimage, featured_image, im
           {/* Card Image Container */}
           <div className="w-full aspect-[4/3] relative mb-4 rounded-xl overflow-hidden bg-[#E6E2D5]">
             {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt={title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+              <>
+                <img
+                  src={imageUrl}
+                  alt={title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(event) => {
+                    event.currentTarget.style.display = 'none';
+                    event.currentTarget.nextElementSibling.style.display = 'flex';
+                  }}
+                />
+                <div className="hidden w-full h-full items-center justify-center text-[#999488] font-display text-xl uppercase tracking-widest">
+                  MEGABLOG
+                </div>
+              </>
             ) : (
               <div className="w-full h-full flex items-center justify-center text-[#999488] font-display text-xl uppercase tracking-widest">
                 MEGABLOG

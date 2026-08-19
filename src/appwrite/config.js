@@ -1,5 +1,5 @@
 import conf from '../conf/conf.js';
-import { Client, ID, Databases, Storage, Query } from "appwrite";
+import { Client, ID, Databases, Storage, Query, Permission, Role } from "appwrite";
 
 export class Service{
     client = new Client();
@@ -190,7 +190,8 @@ export class Service{
             return await this.bucket.createFile(
                 conf.appwriteBucketId,
                 ID.unique(),
-                file
+                file,
+                [Permission.read(Role.any())]
             )
         } catch (error) {
             console.log("Appwrite service :: uploadFile :: error", error);
@@ -211,16 +212,16 @@ export class Service{
         }
     }
 
-    getFilePreview(fileId){
+    getFileView(fileId){
         if (!fileId) return null;
         try {
-            const preview = this.bucket.getFilePreview(
+            const fileView = this.bucket.getFileView(
                 conf.appwriteBucketId,
                 fileId
             );
-            return preview?.href || (typeof preview === 'string' ? preview : preview?.toString());
+            return fileView?.href || (typeof fileView === 'string' ? fileView : fileView?.toString());
         } catch (error) {
-            console.log("Appwrite service :: getFilePreview :: error", error);
+            console.log("Appwrite service :: getFileView :: error", error);
             return null;
         }
     }
