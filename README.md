@@ -14,6 +14,10 @@ The app has public Appwrite configuration defaults in `src/conf/conf.js`, so the
 Add overrides under **Settings > Secrets and variables > Actions** when needed. For browser requests to work, add the deployed Pages hostname as a Web platform in Appwrite, for example `priyamraj201-art.github.io` (do not include `/MegaBlog/`).
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Likes setup
+
+In the Appwrite `articles` table, add an optional integer attribute named `likes` with a default value of `0`. The post page updates this stored value, so every visitor reads the same count from Appwrite.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh

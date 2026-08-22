@@ -14,7 +14,7 @@ export class Service{
         this.bucket = new Storage(this.client);
     }
 
-    async createPost({title, slug, content, featuredImage, status, userId, author}){
+    async createPost({title, slug, content, featuredImage, status, userId, author, likes = 0}){
         let docId = (slug && slug.trim()) ? slug : ID.unique();
 
         const keyMap = {
@@ -43,6 +43,7 @@ export class Service{
             if (featuredImage !== undefined && activeKeys.featuredImage) payload[activeKeys.featuredImage] = featuredImage;
             if (userId !== undefined && activeKeys.userId) payload[activeKeys.userId] = userId;
             if (author !== undefined && activeKeys.author) payload[activeKeys.author] = author;
+            payload.likes = Number(likes) || 0;
 
             try {
                 return await this.databases.createDocument(
@@ -165,6 +166,28 @@ export class Service{
         } catch (error) {
             console.log("Appwrite serive :: getPost :: error", error);
             return false
+        }
+    }
+
+    async changePostLikes(slug, amount, currentLikes = 0){
+        try {
+            const post = await this.getPost(slug);
+            const likes = Number(post?.likes ?? currentLikes ?? 0);
+
+            return await this.databases.updateDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+                slug,
+                { likes: Math.max(0, likes + amount) }
+            );
+        } catch (error) {
+            console.log("Appwrite service :: changePostLikes :: error", error);
+            return {
+                error: {
+                    code: error?.code,
+                    message: error?.message || "Unable to update likes.",
+                },
+            };
         }
     }
 

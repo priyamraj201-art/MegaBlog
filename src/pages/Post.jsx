@@ -9,6 +9,8 @@ export default function Post() {
     const [post, setPost] = useState(null);
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
+    const [likeLoading, setLikeLoading] = useState(false);
+    const [likeError, setLikeError] = useState("");
     const [bookmarked, setBookmarked] = useState(false);
     const [shareMessage, setShareMessage] = useState("");
     const [following, setFollowing] = useState(false);
@@ -43,7 +45,11 @@ export default function Post() {
     useEffect(() => {
         if (slug) {
             appwriteService.getPost(slug).then((postData) => {
-                if (postData) setPost(postData);
+                if (postData) {
+                    setPost(postData);
+                    setLikeCount(Number(postData.likes || 0));
+                    setLiked(false);
+                }
                 else setPost(null);
             });
         }
@@ -60,14 +66,23 @@ export default function Post() {
         });
     };
 
-    const handleLike = () => {
-        if (liked) {
-            setLikeCount(prev => Math.max(0, prev - 1));
-            setLiked(false);
+    const handleLike = async () => {
+        if (!post || likeLoading) return;
+
+        setLikeLoading(true);
+        setLikeError("");
+        const updatedPost = await appwriteService.changePostLikes(post.$id, liked ? -1 : 1, likeCount);
+
+        if (updatedPost && !updatedPost.error) {
+            setPost(updatedPost);
+            setLikeCount(Math.max(0, Number(updatedPost.likes || 0)));
+            setLiked(!liked);
         } else {
-            setLikeCount(prev => prev + 1);
-            setLiked(true);
+            const errorCode = updatedPost?.error?.code ? ` (${updatedPost.error.code})` : "";
+            setLikeError(`LIKE FAILED${errorCode}: ${updatedPost?.error?.message || "Check Appwrite permissions."}`);
         }
+
+        setLikeLoading(false);
     };
 
     const handleAddComment = (e) => {
@@ -202,6 +217,7 @@ export default function Post() {
                         {/* Likes Pill */}
                         <button
                             onClick={handleLike}
+                            disabled={likeLoading}
                             className={`flex items-center gap-2 px-4 py-2 rounded-full border border-[#D5D1C4] transition-all ${
                                 liked
                                     ? "bg-[#121212] text-[#B5FF00] border-[#121212]"
@@ -213,6 +229,11 @@ export default function Post() {
                             </svg>
                             <span>{likeCount}</span>
                         </button>
+                        {likeError && (
+                            <span className="text-[9px] text-red-600 max-w-64" role="alert">
+                                {likeError}
+                            </span>
+                        )}
 
                         {/* Comments Count Pill */}
                         <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[#D5D1C4] bg-[#FAF7EE]">
